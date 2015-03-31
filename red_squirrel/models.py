@@ -17,20 +17,23 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-class Conversion(models.Model):
-    firstUnit = models.ForeignKey(Unit)
-    secondUnit = models.ForeignKey(Unit)
-    ratio = models.DecimalField()
-
 class Unit(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
 
+class Conversion(models.Model):
+    firstUnit = models.ForeignKey(Unit, related_name='first_unit')
+    secondUnit = models.ForeignKey(Unit, related_name='second_unit')
+    ratio = models.FloatField()
+
 class Food(models.Model):
     name = models.CharField(max_length=50)
-    category = models.ForeignKey(Category)
+    category = models.ManyToManyField(Category)
+    # If we break food up, so you can have multiple inventories of a food type
+    # this is a natural breaking point
+
     location = models.ForeignKey(StorageLocation)
     quantity = models.IntegerField(default=1)
     unit = models.ForeignKey(Unit)
